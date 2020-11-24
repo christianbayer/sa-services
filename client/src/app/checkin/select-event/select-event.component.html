@@ -1,0 +1,11 @@
+<form [formGroup]="formGroup" (submit)="onSubmit($event)">
+  <h4>Checkin</h4>
+  <mat-form-field>
+    <mat-label>Event ID</mat-label>
+    <input type="number" matInput placeholder="Enter the event ID" formControlName="event_id" required>
+    <mat-error *ngIf="formGroup.get('event_id')?.hasError('required')">
+      Enter the event ID
+    </mat-error>
+  </mat-form-field>
+  <button mat-flat-button color="primary" type="submit">Sign in</button>
+</form>

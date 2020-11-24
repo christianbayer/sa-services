@@ -1,0 +1,32 @@
+@import '../../../../node_modules/@angular/material/theming';
+
+$app-primary: mat-palette($mat-indigo);
+$primary: mat-color($app-primary);
+
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    min-width: 28rem;
+
+    h4 {
+      font-size: 1.2rem;
+      font-weight: 300;
+      text-align: center;
+    }
+
+    mat-form-field,
+    button {
+      width: 100%;
+    }
+
+    button {
+      height: 3rem;
+    }
+  }
+}

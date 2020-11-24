@@ -1,0 +1,167 @@
+version: "3.5"
+
+services:
+  client:
+    container_name: sa-client
+    build:
+      context: ./client
+    image: sa-client:0.0.1
+    volumes:
+      - ${DIR_CLIENT:-./client}:/app
+    tty: true
+    ports:
+      - "8000:4200"
+    networks:
+      sa-network:
+        ipv4_address: 172.10.10.5
+
+  authentication:
+    container_name: sa-authentication
+    build:
+      context: ${DIR_AUTHENTICATION:-./authentication}
+    image: sa-authentication:0.0.1
+    volumes:
+      - ${DIR_AUTHENTICATION:-./authentication}:/go/src/authentication
+    tty: true
+    ports:
+      - "8010:80"
+    command: bash -c "tail -f /dev/null"
+    depends_on:
+      - users
+    networks:
+      sa-network:
+        ipv4_address: 172.10.10.10
+
+  users:
+    container_name: sa-users
+    build:
+      context: ./users
+    image: sa-users:0.0.1
+    volumes:
+      - ${DIR_USERS:-./users}:/var/www/html
+    tty: true
+    ports:
+      - "8020:80"
+    command: bash -c "service apache2 start && tail -f /dev/null"
+    depends_on:
+      - users-db
+    networks:
+      sa-network:
+        ipv4_address: 172.10.10.20
+
+  users-db:
+    container_name: sa-users-db
+    build:
+      context: ./users-db
+    image: sa-users-db:0.0.1
+    volumes:
+      - users-db:/var/lib/mysql
+    ports:
+      - "8021:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_USERS_PASS:-devel}
+      - MYSQL_DATABASE=${DB_USERS_NAME:-users}
+      - MYSQL_USER=${DB_USERS_USER:-devel}
+      - MYSQL_PASSWORD=${DB_USERS_PASS:-devel}
+    networks:
+      sa-network:
+        ipv4_address: 172.10.10.21
+
+  events:
+    container_name: sa-events
+    build:
+      context: ./events
+    image: sa-events:0.0.1
+    volumes:
+      - ${DIR_EVENTS:-./events}:/var/www/html
+    tty: true
+    ports:
+      - "8030:80"
+    command: bash -c "service apache2 start && tail -f /dev/null"
+    depends_on:
+      - events-db
+    networks:
+      sa-network:
+        ipv4_address: 172.10.10.30
+
+  events-db:
+    container_name: sa-events-db
+    build:
+      context: ./events-db
+    image: sa-events-db:0.0.1
+    volumes:
+      - events-db:/data/postgres
+    ports:
+      - "8031:5432"
+    environment:
+      POSTGRES_DB: ${DB_EVENTS_NAME:-events}
+      POSTGRES_USER: ${DB_EVENTS_USER:-devel}
+      POSTGRES_PASSWORD: ${DB_EVENTS_PASS:-devel}
+      PGDATA: /data/postgres
+    networks:
+      sa-network:
+        ipv4_address: 172.10.10.31
+
+  subscriptions:
+    container_name: sa-subscriptions
+    build:
+      context: ./subscriptions
+    image: sa-subscriptions:0.0.1
+    volumes:
+      - ${DIR_SUBSCRIPTIONS:-./subscriptions}:/app
+      - /app/node_modules
+    tty: true
+    ports:
+      - "8040:80"
+    depends_on:
+      - subscriptions-db
+    networks:
+      sa-network:
+        ipv4_address: 172.10.10.40
+
+  subscriptions-db:
+    container_name: sa-subscriptions-db
+    build:
+      context: ./subscriptions-db
+    image: sa-subscriptions-db:0.0.1
+    volumes:
+      - subscriptions-db:/data/db
+    ports:
+      - "8041:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_SUBSCRIPTIONS_USER:-devel}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_SUBSCRIPTIONS_PASS:-devel}
+    networks:
+      sa-network:
+        ipv4_address: 172.10.10.41
+
+  checkin:
+    container_name: sa-checkin
+    build:
+      context: ./checkin
+    image: sa-checkin:0.0.1
+    volumes:
+      - ${DIR_CHECKIN:-./checkin}:/app
+    tty: true
+    ports:
+      - "8042:80"
+    depends_on:
+      - subscriptions-db
+    networks:
+      sa-network:
+        ipv4_address: 172.10.10.42
+
+volumes:
+  users-db:
+  events-db:
+  subscriptions-db:
+
+networks:
+  sa-network:
+    driver: bridge
+    driver_opts:
+      com.docker.network.enable_ipv6: "false"
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.10.10.0/24

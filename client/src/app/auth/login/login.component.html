@@ -1,0 +1,22 @@
+<form [formGroup]="formGroup" (submit)="onSubmit($event)">
+  <h4>Sign into your account</h4>
+  <mat-form-field>
+    <mat-label>Email Address</mat-label>
+    <input type="email" matInput placeholder="Enter your email address" formControlName="email" required>
+    <mat-error *ngIf="formGroup.get('email')?.hasError('required')">
+      Enter your email address
+    </mat-error>
+    <mat-error *ngIf="!formGroup.get('email')?.hasError('required') && formGroup.get('email')?.hasError('required')">
+      Enter a valid email address
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Password</mat-label>
+    <input type="password" matInput placeholder="Enter your password" formControlName="password" required>
+    <mat-error *ngIf="formGroup.get('password')?.hasError('required')">
+      Enter your password
+    </mat-error>
+  </mat-form-field>
+  <button mat-flat-button color="primary" type="submit">Sign in</button>
+  <p class="other-action">Don't have an account? <a routerLink="/register">Sign up</a></p>
+</form>

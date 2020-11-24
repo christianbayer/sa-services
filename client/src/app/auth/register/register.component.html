@@ -1,0 +1,45 @@
+<form [formGroup]="formGroup" (submit)="onSubmit($event)">
+  <h4>Sign up with to SA-Services</h4>
+  <mat-form-field>
+    <mat-label>Full Name</mat-label>
+    <input type="text" matInput placeholder="Enter your name" formControlName="name" required>
+    <mat-error *ngIf="formGroup.get('name')?.hasError('required')">
+      Enter your name
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Birthdate</mat-label>
+    <input type="text" matInput placeholder="Enter your birthdate" formControlName="birthdate" required [matDatepicker]="picker">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+    <mat-error *ngIf="formGroup.get('birthdate')?.hasError('required')">
+      Enter your birthdate
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Identity number</mat-label>
+    <input type="tel" matInput placeholder="Enter your identity number" formControlName="identity" required>
+    <mat-error *ngIf="formGroup.get('identity')?.hasError('required')">
+      Enter your identity number
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Email Address</mat-label>
+    <input type="email" matInput placeholder="Enter your email address" formControlName="email" required>
+    <mat-error *ngIf="formGroup.get('email')?.hasError('required')">
+      Enter your email address
+    </mat-error>
+    <mat-error *ngIf="!formGroup.get('email')?.hasError('required') && formGroup.get('email')?.hasError('required')">
+      Enter a valid email address
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Password</mat-label>
+    <input type="password" matInput placeholder="Enter your password" formControlName="password" required>
+    <mat-error *ngIf="formGroup.get('password')?.hasError('required')">
+      Enter your password
+    </mat-error>
+  </mat-form-field>
+  <button mat-flat-button color="primary" type="submit">Sign up</button>
+  <p class="other-action">Already have an account? <a routerLink="/login">Sign in</a></p>
+</form>

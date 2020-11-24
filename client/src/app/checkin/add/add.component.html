@@ -1,0 +1,25 @@
+<h2 mat-dialog-title>Add person</h2>
+<mat-dialog-content>
+  <form [formGroup]="formGroup" (submit)="submit()">
+    <mat-form-field>
+      <mat-label>Identity number</mat-label>
+      <input type="tel" matInput placeholder="Enter your identity number" formControlName="identity" required>
+      <mat-error *ngIf="formGroup.get('identity')?.hasError('required')">
+        Enter your identity number
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Birthdate</mat-label>
+      <input type="text" matInput placeholder="Enter your birthdate" formControlName="birthdate" required [matDatepicker]="picker">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error *ngIf="formGroup.get('birthdate')?.hasError('required')">
+        Enter your birthdate
+      </mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button (click)="submit()">Submit</button>
+</mat-dialog-actions>

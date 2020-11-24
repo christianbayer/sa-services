@@ -1,0 +1,12 @@
+# Editor
+/.idea
+/.vscode
+
+# Dependencies
+/vendor
+
+# Environment
+.env
+
+# Binary build
+authentication
