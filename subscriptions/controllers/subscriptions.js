@@ -12,7 +12,7 @@ exports.list = function (req, res) {
                 return res.status(500).json({error: err});
             }
             const eventsIds = JSON.stringify(subscriptions.map(subscription => subscription.event_id));
-            axios.get(`http://172.10.10.30/events/fetch?ids=${eventsIds}`).then(response => {
+            axios.get(`http://172.10.10.30/public/api/events/fetch?ids=${eventsIds}`).then(response => {
                 const events = response.data.events;
                 const subs = subscriptions.map(subscription => {
                     const event = events.find(event => event.id === subscription.event_id);
@@ -32,7 +32,7 @@ exports.list = function (req, res) {
                 return res.status(500).json({error: err});
             }
             const usersIds = JSON.stringify(subscriptions.map(subscription => subscription.user_id));
-            axios.get(`http://172.10.10.20/public/users/fetch?ids=${usersIds}`).then(response => {
+            axios.get(`http://172.10.10.20/public/fetch?ids=${usersIds}`).then(response => {
                 const users = response.data.users;
                 const subs = subscriptions.map(subscription => {
                     const user = users.find(user => user.id === subscription.user_id);
@@ -67,8 +67,8 @@ exports.create = function (req, res) {
 
         // Check for event and user
         axios.all([
-            axios.get(`http://172.10.10.30/events/${subscription.event_id}/exists`),
-            axios.get(`http://172.10.10.20/public/users/${subscription.user_id}/exists`)
+            axios.get(`http://172.10.10.30/public/api/events/${subscription.event_id}/exists`),
+            axios.get(`http://172.10.10.20/public/${subscription.user_id}/exists`)
         ]).then(axios.spread((response1, response2) => {
 
             // Check if the event exists

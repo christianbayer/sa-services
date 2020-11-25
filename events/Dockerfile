@@ -66,9 +66,15 @@ RUN a2enmod ssl
 # Configure Apache site
 RUN printf "<VirtualHost *:80>\n         ServerName localhost\n         ServerAdmin webmaster@localhost\n         DocumentRoot /var/www/html/public\n\n         <Directory /var/www/html/public>\n             Options Indexes FollowSymLinks\n             AllowOverride All\n             Require all granted\n         </Directory>\n\n         ErrorLog /var/log/apache2/_error.log\n         CustomLog /var/log/apache2/_access.log combined\n\n</VirtualHost>\n" >> /etc/apache2/sites-available/000-default.conf
 
-# Create application directory
-WORKDIR /var/www/html
-RUN chown -R www-data:www-data /var/www/html
+# Copy project
+COPY . .
 
-# Expose the port for HTTP and HTTPS access
-EXPOSE 80 443
+# Install packages
+RUN composer install
+
+# Grant apache access
+RUN chown -R www-data:www-data /var/www/html
+RUN chmod -R 777 /var/www/html/storage
+
+# Expose the port for HTTP access
+EXPOSE 80

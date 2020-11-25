@@ -25,7 +25,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // Setup routes
-app.use('/subscriptions', subscriptions);
+app.use('/api/subscriptions/', subscriptions);
 
 // Get the port
 const port = process.env.PORT || 8080;

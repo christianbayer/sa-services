@@ -9,11 +9,11 @@ export class EventsService {
   constructor(private _http: HttpClient, private _sessionService: SessionService) { }
 
   public index(): Observable<any> {
-    return this._http.get('http://localhost:8030/events/index');
+    return this._http.get('http://177.44.248.86/api/events/index');
   }
 
   public subscribe(eventId: number): Observable<any> {
-    return this._http.post('http://localhost:8040/subscriptions/create', {
+    return this._http.post('http://177.44.248.86/api/subscriptions/create', {
       user_id: this._sessionService.user.id,
       event_id: eventId,
     });

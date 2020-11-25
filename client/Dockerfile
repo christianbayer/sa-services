@@ -16,4 +16,4 @@ RUN npm i
 ENTRYPOINT ["npm", "run", "start"]
 
 # Expose the port for HTTP access
-EXPOSE 4200
+EXPOSE 4200 49153

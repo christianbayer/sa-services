@@ -17,7 +17,7 @@ func main() {
 
 	// Routing
 	r := mux.NewRouter()
-	r.HandleFunc("/login", controllers.Login).Methods(http.MethodPost)
+	r.HandleFunc("/api/auth/login", controllers.Login).Methods(http.MethodPost)
 
 	http.Handle("/", r)
 
@@ -25,7 +25,7 @@ func main() {
 	originsOk := handlers.AllowedOrigins([]string{"*"})
 	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"})
 
-	// Start the server on port 8001
+	// Start the server
 	port := helpers.GetEnvString("APP_PORT")
 	fmt.Printf("Server started at localhost:%s\n", port)
 	log.Fatal(http.ListenAndServe(":"+port, handlers.CORS(originsOk, headersOk, methodsOk)(r)))

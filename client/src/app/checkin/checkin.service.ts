@@ -9,11 +9,11 @@ export class CheckinService {
   constructor(private _http: HttpClient, private _sessionService: SessionService) { }
 
   public list(eventId: number): Observable<any> {
-    return this._http.get('http://localhost:8040/subscriptions/list?event_id=' + eventId);
+    return this._http.get('http://177.44.248.86/api/subscriptions/list?event_id=' + eventId);
   }
 
   public checkin(data:any): Observable<any> {
-    return this._http.post('http://localhost:8042/checkin', data);
+    return this._http.post('http://177.44.248.86/api/checkin', data);
   }
 
 }

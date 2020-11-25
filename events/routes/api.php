@@ -14,6 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('events/index', 'EventsController@index');
-Route::get('events/{id}/exists', 'EventsController@exists');
-Route::get('events/fetch', 'EventsController@fetch');
+Route::get('api/events/index', 'EventsController@index');
+Route::get('api/events/{id}/exists', 'EventsController@exists');
+Route::get('api/events/fetch', 'EventsController@fetch');

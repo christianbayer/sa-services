@@ -67,7 +67,16 @@ RUN printf "<VirtualHost *:80>\n         ServerName localhost\n         ServerAd
 
 # Create application directory
 WORKDIR /var/www/html
-RUN chown -R www-data:www-data /var/www/html
 
-# Expose the port for HTTP and HTTPS access
-EXPOSE 80 443
+# Copy project
+COPY . .
+
+# Install packages
+RUN composer install
+
+# Grant apache access
+RUN chown -R www-data:www-data /var/www/html
+RUN chmod -R 777 /var/www/html/storage
+
+# Expose the port for HTTP access
+EXPOSE 80

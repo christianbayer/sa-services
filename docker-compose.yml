@@ -8,9 +8,11 @@ services:
     image: sa-client:0.0.1
     volumes:
       - ${DIR_CLIENT:-./client}:/app
+      - /app/node_modules
     tty: true
     ports:
       - "8000:4200"
+      - "49153:49153"
     networks:
       sa-network:
         ipv4_address: 172.10.10.5
@@ -22,6 +24,7 @@ services:
     image: sa-authentication:0.0.1
     volumes:
       - ${DIR_AUTHENTICATION:-./authentication}:/go/src/authentication
+      - /go/src/authentication/vendor
     tty: true
     ports:
       - "8010:80"
@@ -39,6 +42,7 @@ services:
     image: sa-users:0.0.1
     volumes:
       - ${DIR_USERS:-./users}:/var/www/html
+      - /var/www/html/vendor
     tty: true
     ports:
       - "8020:80"
@@ -74,6 +78,7 @@ services:
     image: sa-events:0.0.1
     volumes:
       - ${DIR_EVENTS:-./events}:/var/www/html
+      - /var/www/html/vendor
     tty: true
     ports:
       - "8030:80"

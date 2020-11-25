@@ -1,9 +1,11 @@
 <mat-toolbar color="primary">
   <a mat-button routerLink="/" class="logo">SA-Services</a>
   <a mat-button routerLink="/events">Events</a>
-  <a mat-button routerLink="/subscriptions">Subscriptions</a>
   <a mat-button routerLink="/validate-certificate">Validate certificate</a>
-  <a mat-button routerLink="/checkin">Checkin</a>
+  <ng-container *ngIf="hasUser">
+    <a mat-button routerLink="/subscriptions">Subscriptions</a>
+    <a mat-button routerLink="/checkin">Checkin</a>
+  </ng-container>
   <span class="spacer"></span>
   <ng-container *ngIf="hasUser">
     <mat-slide-toggle
