@@ -12,16 +12,15 @@ export class OfflineService {
   constructor() {
     window.addEventListener('online', () => this.updateOnlineStatus());
     window.addEventListener('offline', () => this.updateOnlineStatus());
-    this._online = localStorage.getItem('online') === '1';
+    this._online = localStorage.getItem('online') === '1' || localStorage.getItem('online') === null;
   }
 
-  get connectionChanged():Observable<boolean> {
+  get connectionChanged(): Observable<boolean> {
     return this._connectionChanged.asObservable();
   }
 
   get isOnline() {
-    return this._online;
-    return !!window.navigator.onLine;
+    return this._online // !!window.navigator.onLine;
   }
 
   private updateOnlineStatus() {

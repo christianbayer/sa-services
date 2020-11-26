@@ -3,6 +3,7 @@ from flask_restful import Resource
 import requests
 from models.subscriptions import Subscriptions
 import datetime
+import os
 
 class CheckinController(Resource):
     def post(self) -> Response:
@@ -17,12 +18,12 @@ class CheckinController(Resource):
                 # Create the user
                 params = {'identity': data.get('identity'), 'birthdate': data.get('birthdate')}
                 headers = {'Content-type': 'application/json', 'Accept-type': 'application/json'}
-                r = requests.post(url='http://172.10.10.20/public/store', json=params, headers=headers)
+                r = requests.post(url=os.getenv('API_GATEWAY') + 'users/store', json=params, headers=headers)
                 userId = r.json()['user']['id']
 
                 # Create the subscription
                 params = {'event_id': eventId, 'user_id': userId}
-                r = requests.post(url='http://172.10.10.40/api/subscriptions/create', json=params, headers=headers)
+                r = requests.post(url=os.getenv('API_GATEWAY') + 'subscriptions/create', json=params, headers=headers)
             except:
                 response = jsonify({'error': "There was an error!"})
                 response.status_code = 500

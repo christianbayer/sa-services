@@ -63,7 +63,8 @@ RUN a2enmod headers
 RUN a2enmod ssl
 
 # Configure Apache site
-RUN printf "<VirtualHost *:80>\n         ServerName localhost\n         ServerAdmin webmaster@localhost\n         DocumentRoot /var/www/html/public\n\n         <Directory /var/www/html/public>\n             Options Indexes FollowSymLinks\n             AllowOverride All\n             Require all granted\n         </Directory>\n\n         ErrorLog /var/log/apache2/_error.log\n         CustomLog /var/log/apache2/_access.log combined\n\n</VirtualHost>\n" >> /etc/apache2/sites-available/000-default.conf
+RUN : > /etc/apache2/sites-available/000-default.conf && \
+ printf "<VirtualHost *:80>\n        ServerName localhost\n        ServerAlias 172.10.10.20 sa-users\n        ServerAdmin webmaster@localhost\n        DocumentRoot /var/www/html/public\n\n        <Directory /var/www/html/public>\n                Options Indexes FollowSymLinks\n                AllowOverride All\n                Require all granted\n        </Directory>\n\n        ErrorLog /var/log/apache2/_error.log\n        CustomLog /var/log/apache2/_access.log combined\n\n</VirtualHost>\n" >> /etc/apache2/sites-available/000-default.conf
 
 # Create application directory
 WORKDIR /var/www/html

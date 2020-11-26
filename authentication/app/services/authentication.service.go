@@ -12,13 +12,13 @@ import (
 
 func Attempt(login models.Login) (int, string, models.User) {
 
-	var api = helpers.GetEnvString("API_ENDPOINT")
+	var api = helpers.GetEnvString("API_GATEWAY")
 
 	// Create json
 	jsonReq, err := json.Marshal(login)
 
 	// Do the request
-	resp, err := http.Post(api+"/attempt", "application/json; charset=utf-8", bytes.NewBuffer(jsonReq))
+	resp, err := http.Post(api + "/attempt", "application/json; charset=utf-8", bytes.NewBuffer(jsonReq))
 	if err != nil {
 		log.Fatalln(err)
 	}

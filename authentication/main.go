@@ -26,7 +26,7 @@ func main() {
 	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"})
 
 	// Start the server
-	port := helpers.GetEnvString("APP_PORT")
+	port := helpers.GetEnvString("PORT")
 	fmt.Printf("Server started at localhost:%s\n", port)
 	log.Fatal(http.ListenAndServe(":"+port, handlers.CORS(originsOk, headersOk, methodsOk)(r)))
 }

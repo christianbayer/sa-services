@@ -1,6 +1,18 @@
 version: "3.5"
 
 services:
+  webserver:
+    container_name: sa-webserver
+    build:
+      context: ./webserver
+    image: sa-webserver:0.0.1
+    tty: true
+    ports:
+      - "80:80"
+    networks:
+      sa-network:
+        ipv4_address: 172.10.10.254
+
   client:
     container_name: sa-client
     build:

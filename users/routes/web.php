@@ -13,14 +13,7 @@
 |
 */
 
-// Authentication
-$router->post('attempt', ['uses' => 'UsersController@attempt']);
-
-// Integrity verification
-$router->get('{id}/exists', ['uses' => 'UsersController@exists']);
-
-// Create new user
-$router->post('store', ['uses' => 'UsersController@store']);
-
-// List of users
-$router->get('fetch', ['uses' => 'UsersController@fetch']);
+$router->post('api/users/attempt', ['uses' => 'UsersController@attempt']);
+$router->get('api/users/{id}/exists', ['uses' => 'UsersController@exists']);
+$router->post('api/users/store', ['uses' => 'UsersController@store']);
+$router->get('api/users/fetch', ['uses' => 'UsersController@fetch']);
