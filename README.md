@@ -1,96 +1,96 @@
 # SA Services
-This is a microservices approach for the Software Architecture class of the Bachelor of Software Engineering at UNIVATES.
+This is a microservices approach for the **final task** of the Software Architecture class of the Bachelor of Software Engineering at UNIVATES.
 
-### Architecture
+
+## Task description
+
+Based on the concepts of microservices, we will carry out an implementation based on the following theme.
+
+**Theme: Event System**
+
+Imagine a small system for managing events. Users can access the portal, search for available events and register. After registration, the user is allowed to consult his registration and also cancel, as long as within the acceptable period for cancellation.
+
+When attending the event, attendants perform the participants' checkin. A non-registered participant can check in by means of a basic and quick registration at the event's reception desk. The complete data of that user must be filled in later by him in the system itself.
+
+After the end of the event, users are allowed to issue their certificate of participation. For this, an interface is provided to the user where all the events that he participated are listed,
+
+allowing selection of certificate generation. Still on the certificates, they have a unique authentication code printed on the document itself, accompanied by an address for digital validation of that certificate.
+
+The system sends e-mail to each activity that changes data in the enrollment system, whether they are: enrollment, cancellation, attendance and certificate issuance.
+
+
+## Architecture
 ![SA-Service Architecture](sa-services-architecture.jpeg)
 
-### Database Model
-![SA-Service DB Model](sa-services-db.jpeg)
+
+## Database Model
+![SA-Service DB Model](sa-services-db.png)
+
 
 ## Containers
 
-### `sa-client`
-Angular application, running on `172.10.10.5:8000`.
+#### `sa-webserver`
+NGINX web server, running on `localhost:80` and `172.10.10.254:80`. 
 
-##### Endpoints
-| Route            |
-| ---------------- |
-| `/login`         |
-| `/logout`        |
-| `/register`      |
-| `/events`        |
-| `/subscriptions` |
-| `/checkin`       |
-| `/checkin/:id`   |
+It is the entrypoint for the application. NGINX acts as an API gateway and reverse proxy for all the microservices.
 
 
-### `sa-authentication`
-GoLang application, running on `172.10.10.10:8010`.
+#### `sa-client`
+Angular application, running on `localhost:8000` and `172.10.10.5:80`.
 
-##### Endpoints
-| Route    | Method | Params                                                | Success                                             | Failure                       |
-| -------- | ------ | ----------------------------------------------------- | --------------------------------------------------- | ----------------------------- |
-| `/login` | `POST` | ```{"email": "foo@bar.com", "password": "asecret"}``` | ```{"token": "thatlongtoken", "expires": "time"}``` | ```{"error": "A message."}``` |
+It is the frontend application that consumes all these microservices.
 
 
-### `sa-users`
-PHP Lumen application, running on `172.10.10.20:8020`.
+#### `sa-authentication`
+GoLang application, running on `localhost:8010` and `172.10.10.10:80`.
 
-##### Endpoints
-| Route                | Method | Params                                                                                                                          | Success                       | Failure                       |
-| -------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- | ----------------------------- |
-| `/users/attempt`     | `POST` | ```{"email": "foo@bar.com", "password": "asecret"}```                                                                           | ```{"user": {...}}```         | ```{"error": "A message."}``` |
-| `/users/{id}/exists` | `GET`  |                                                                                                                                 | ```{"exists": true\|false}``` | ```{"error": "A message."}``` |
-| `/users/store`       | `POST` | ```{"name": "John Doe", "birthdate": "1990-01-01", "identity": "01234567890", "email": "foo@bar.com", "password": "johndoe"}``` | ```{"user": {...}}```         | ```{"error": "A message."}``` |
-| `/users/fetch`       | `GET`  |                                                                                                                                 | ```{"users": {...}}```        | ```{"error": "A message."}``` |
+It handles the authentication of the users with email and password.
 
 
-### `sa-users-db`
-MariaDB, running on `172.10.10.21:8021`.
+#### `sa-users`
+PHP Lumen application, running on `localhost:8020` and `172.10.10.20:80`.
+
+It handles the actions related to users resources.
 
 
-### `sa-events`
-PHP Laravel application, running on `172.10.10.30:8030`.
+#### `sa-users-db`
+MariaDB, running on `localhost:8021` and `172.10.10.21:3306`.
 
-##### Endpoints
-| Route                 | Method | Params | Success                       | Failure                       |
-| --------------------- | ------ | ------ | ----------------------------- | ----------------------------- |
-| `/events/index`       | `GET`  |        | ```{"events": {...}}```       | ```{"error": "A message."}``` |
-| `/events/{id}/exists` | `GET`  |        | ```{"exists": true\|false}``` | ```{"error": "A message."}``` |
-| `/events/fetch`       | `GET`  |        | ```{"events": {...}}```       | ```{"error": "A message."}``` |
+It is keeps all the data related to users. 
 
 
-### `sa-events-db`
-PostgreSQL, running on `172.10.10.31:8031`.
+#### `sa-events`
+PHP Laravel application, running on `localhost:8030` and `172.10.10.30:80`.
+
+It handles the actions related to events resources.
 
 
-### `sa-subscriptions`
-Node Express application, running on `172.10.10.40:8040`.
+#### `sa-events-db`
+PostgreSQL, running on `localhost:8031` and `172.10.10.31:5432`.
 
-##### Endpoints
-| Route                   | Method | Params                                                                                                                          | Success                       | Failure                       |
-| ----------------------- | ------ | --------------------------------------- | ----------------------- | ----------------------------- |
-| `/subscriptions/list`   | `GET`  |                                         | ```{"users": {...}}```  | ```{"error": "A message."}``` |
-| `/subscriptions/create` | `POST` | ```{"event_id": "1", "user_id": "1"}``` | ```{"success": true}``` | ```{"error": "A message."}``` |
-| `/subscriptions/delete` | `POST` | ```{"event_id": "1", "user_id": "1"}``` | ```{"success": true}``` | ```{"error": "A message."}``` |
+It is keeps all the data related to events. 
 
 
-### `sa-subscriptions-db`
-MongoDB, running on `172.10.10.41:8041`.
+#### `sa-subscriptions`
+Node Express application, running on `localhost:8040` and `172.10.10.40:80`.
+
+It handles the actions related to subscriptions resources.
 
 
-### `sa-checkin`
-Python Flask application, running on `172.10.10.42:8042`.
+#### `sa-subscriptions-db`
+MongoDB, running on `localhost:8041` and `172.10.10.41:27017`.
 
-##### Endpoints
-| Route      | Method | Params                                                                        | Success                 | Failure                       |
-| ---------- | ------ | ----------------------------------------------------------------------------- | ----------------------- | ----------------------------- |
-| `/checkin` | `POST` | ```{"user_id": "1", "event_id": "1"}```                                       | ```{"success": true}``` | ```{"error": "A message."}``` |
-| `/checkin` | `POST` | ```{"event_id": "1", "identity": "00000000000", "birthdate": "0000-00-00"}``` | ```{"success": true}``` | ```{"error": "A message."}``` |
+It is keeps all the data related to subscriptions. 
 
-  
-## Building
-On the `bewize-infra` folder, run:
+
+#### `sa-checkin`
+Python Flask application, running on `localhost:8042` and `172.10.10.42:80`.
+
+It handles the actions related to checkin resources.
+
+
+## Running
+On the root folder, run:
 ```
 docker-compose up --build -d
 ```
